@@ -1,0 +1,6 @@
+<svg class="nion-icon" preserveAspectRatio="none"   viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer circle -->
+  <circle cx="100" cy="100" r="80" stroke="#000" stroke-width="4"/>
+  <!-- Inner circle -->
+  <circle cx="100" cy="100" r="60" stroke="#000" stroke-width="4"/>
+</svg>

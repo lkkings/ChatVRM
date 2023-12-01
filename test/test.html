@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading Page</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #000;
+      overflow: hidden;
+    }
+    svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+<body>
+  <svg id="neonText" width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+    <text x="50" y="100" font-size="50" font-family="Arial" fill="#ff6ec7" stroke="#000" stroke-width="1">
+      <animate attributeName="fill" dur="1s" repeatCount="indefinite" keyTimes="0; 0.5; 1" values="#ff6ec7; #ff1493; #ff6ec7" />
+      Neon Lights!
+    </text>
+  </svg>
+
+  <script>
+    // Simulate loading time
+    setTimeout(() => {
+      const neonText = document.getElementById('neonText');
+      neonText.style.display = 'none'; // Hide neon text
+
+      // Create and append the explosion effect
+      const explosion = document.createElement('div');
+      explosion.className = 'explosion';
+      document.body.appendChild(explosion);
+
+      // Trigger the explosion effect after a slight delay
+      setTimeout(() => {
+        explosion.style.animation = 'explode 0.5s ease forwards';
+      }, 500);
+    }, 3000); // Change the timeout value to simulate longer or shorter loading time
+  </script>
+
+  <style>
+    @keyframes explode {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(10);
+        opacity: 0;
+      }
+    }
+    .explosion {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #ff6ec7;
+      animation: explode 0s ease forwards;
+    }
+  </style>
+</body>
+</html>

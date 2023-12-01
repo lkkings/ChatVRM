@@ -1,0 +1,22 @@
+<svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    /* 定义亮粉色 */
+    @keyframes neon {
+      0% {
+        fill: #ff6ec7;
+      }
+      50% {
+        fill: #ff1493;
+      }
+      100% {
+        fill: #ff6ec7;
+      }
+    }
+  </style>
+  
+  <!-- 创建文本并应用动画 -->
+  <text x="50" y="100" font-size="50" font-family="Arial" fill="#ff6ec7" stroke="#000" stroke-width="1">
+    <animate attributeName="fill" dur="1s" repeatCount="indefinite" keyTimes="0; 0.5; 1" values="#ff6ec7; #ff1493; #ff6ec7" />
+    Neon Lights!
+  </text>
+</svg>

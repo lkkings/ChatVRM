@@ -18,8 +18,16 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    //解析非相对模块的基础地址，默认是当前目录
+    "baseUrl": "./",
+    //路径映射，相对于baseUrl
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue","src/**/*.d.ts", "auto-imports.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
