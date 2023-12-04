@@ -2,8 +2,6 @@ import * as THREE from "three";
 import Model from "./model";
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { loadMixamoAnimation } from "@/lib/VRMAnimation/loadMixamoAnimation.ts";
-import fs from 'fs';
-import path from "path";
 import { VRM } from "@pixiv/three-vrm";
 
 /**
@@ -43,7 +41,6 @@ export default class Viewer {
 
   private _initLoadSystemFBX() {
     const files = import.meta.glob('@/assets/daily/*.fbx', { eager: true });
-    console.log("files",files);
     // files.forEach(async (file) => {
     //   const filePath = path.join("@/assets/daily", file);
     //   const fileStat = fs.statSync(filePath);
