@@ -16,8 +16,7 @@
     "vue": "^3.3.8"
   },
   "devDependencies": {
-    "@types/node": "^20.10.2",
-    "@types/three": "^0.159.0",
+    "@types/node": "^20.10.0",
     "@vitejs/plugin-vue": "^4.5.0",
     "typescript": "^5.2.2",
     "unplugin-auto-import": "^0.17.1",

@@ -14,7 +14,7 @@ import(`@/assets/icon/${props.name}.svg`))
 <template>
     <component :is="icon"/>
 </template>
-<style>
+<style scoped>
 @-webkit-keyframes flicker {
   0%,
 	19%,
