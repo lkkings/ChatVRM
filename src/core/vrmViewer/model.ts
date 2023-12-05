@@ -46,7 +46,6 @@ export default class Model {
     if (vrm.lookAt) vrm.lookAt.target = this._lookAtTargetParent;
 
     this.emoteMananger = new EmoteMananger(vrm);
-
   }
 
   public unLoadVrm() {

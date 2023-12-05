@@ -2,7 +2,7 @@ import * as THREE from "three";
 import Model from "./model";
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { loadMixamoAnimation } from "@/lib/VRMAnimation/loadMixamoAnimation.ts";
-import { VRM } from "@pixiv/three-vrm";
+import * as TWEEN from "@tweenjs/tween.js";
 
 /**
  * three.jsを使った3Dビューワー
@@ -18,12 +18,20 @@ export default class Viewer {
   private _scene: THREE.Scene;
   private _camera?: THREE.PerspectiveCamera;
   private _cameraControls?: OrbitControls;
+  private _loader?: THREE.TextureLoader;
 
   constructor() {
     this.isReady = false;
 
+    //loader
+    this._loader = new THREE.TextureLoader();
+
     // scene
     const scene = new THREE.Scene();
+    const backgroundImage = import.meta.env.APP_DEFAULT_BACKGROUND_IMAGE;
+    
+    const backgroundTexture = this._loader.load(backgroundImage);
+    scene.background = backgroundTexture;
     this._scene = scene;
 
     // light
@@ -39,21 +47,36 @@ export default class Viewer {
     this._clock.start();
   }
 
-  private _initLoadSystemFBX() {
-    const files = import.meta.glob('@/assets/daily/*.fbx', { eager: true });
-    // files.forEach(async (file) => {
-    //   const filePath = path.join("@/assets/daily", file);
-    //   const fileStat = fs.statSync(filePath);
-    //   if (fileStat.isFile() && file.toLowerCase().endsWith('.fbx')) {
-    //     const fileName = path.parse(file).name; 
-    //     this.model?.clipMap.set(fileName,await loadMixamoAnimation(filePath,this.model.vrm as VRM));
-    //     console.log(`loaded system fbx file ${file}`);
-    //   }
-    // });
+  private async _initLoadSystemFbx(){
+    if (!this.model?.vrm) return; 
+    this.model.clipMap.set("idle_01",await loadMixamoAnimation("daily/idle_01.fbx",this.model.vrm));
+    this.model.clipMap.set("idle_02",await loadMixamoAnimation("daily/idle_02.fbx",this.model.vrm));
+    this.model.clipMap.set("idle_03",await loadMixamoAnimation("daily/idle_03.fbx",this.model.vrm));
+    this.model.clipMap.set("idle_happy_01",await loadMixamoAnimation("daily/idle_happy_01.fbx",this.model.vrm));
+    this.model.clipMap.set("idle_happy_02",await loadMixamoAnimation("daily/idle_happy_02.fbx",this.model.vrm));
+    this.model.clipMap.set("idle_happy_03",await loadMixamoAnimation("daily/idle_happy_03.fbx",this.model.vrm));
+    this.model.clipMap.set("kiss_01",await loadMixamoAnimation("daily/kiss_01.fbx",this.model.vrm));
+    this.model.clipMap.set("talking_01",await loadMixamoAnimation("daily/talking_01.fbx",this.model.vrm));
+    this.model.clipMap.set("talking_02",await loadMixamoAnimation("daily/talking_02.fbx",this.model.vrm));
+    this.model.clipMap.set("standing_greeting",await loadMixamoAnimation("emote/standing_greeting.fbx",this.model.vrm));
+    this.model.clipMap.set("thinking",await loadMixamoAnimation("emote/thinking.fbx",this.model.vrm));
+    this.model.clipMap.set("excited",await loadMixamoAnimation("emote/excited.fbx",this.model.vrm));
   }
-  
 
-  public loadVrm(url: string) {
+  public changeBackgroundImage(url: string){
+     // 加载新的背景图片纹理
+    console.log(url);
+    const newTexture = this._loader?.load(url);
+     // 在 Tween.js 动画中平滑过渡背景图片变化
+    new TWEEN.Tween(this._scene.background)
+      .to(newTexture, 1000)
+      .onUpdate(()=>{
+        this._scene.background = this._scene.background;
+      })
+      .start();
+  }
+
+  public loadVrm(url: string,onLoad?: () => void,) {
     if (this.model?.vrm) {
       this.unloadVRM();
     }
@@ -69,22 +92,45 @@ export default class Viewer {
       });
       
       // 修改相机的位置
-      // this._camera?.position.set(0, 0, 2.0);  // 把相机位置设为 (0, 2.6, 3.0) 
+      this._camera?.position.set(0, 0, 5.0);  
 
       this._scene.add(this.model.vrm.scene);
 
-       // 加载所有人物动作
-      this._initLoadSystemFBX();
-
-      // const vrma = await loadVRMAnimation(buildUrl("/idle_loop.vrma"));
-      // if (vrma) this.model.loadAnimation(vrma);
-      await this.model.loadSystemFBX("idle_01")
-
+      // 初始化加载人物动作
+      await this._initLoadSystemFbx();
+      await this.model.loadSystemFBX(import.meta.env.APP_DEFAULT_DAILY);
+      // 加载完成回调
+      if (onLoad) onLoad();
       // HACK: アニメーションの原点がずれているので再生後にカメラ位置を調整する
       requestAnimationFrame(() => {
         this.resetCamera();
       });
     });
+  }
+
+  public camera2position() {
+    if (!this._cameraControls) throw Error("camera controls is not found!");
+    if (!this._camera) throw Error("head node is not found!");
+    const headNode = this.model?.vrm?.humanoid.getNormalizedBoneNode("head");
+    if (!headNode) throw Error("head node is not found!");
+    const headWPos = headNode.getWorldPosition(new THREE.Vector3());
+    const position = {x:headWPos.x, y:headWPos.y, z:headWPos.z}
+    const initialPosition = {x:this._camera.position.x,y:this._camera.position.y,z:this._camera.position.z}
+    console.log("initialPosition",initialPosition)
+    new TWEEN.Tween(initialPosition)
+      .to(position, 2000)
+      .onUpdate(() => {
+        console.log(position)
+        this._camera?.position.set(
+          this._camera.position.x,
+          initialPosition.y,
+          this._camera.position.z
+        );
+        this._cameraControls?.target.set(initialPosition.x, initialPosition.y, initialPosition.z);
+        this._cameraControls?.update();
+      })
+      .onComplete(()=>{console.log("endPosition",initialPosition)})
+      .start();
   }
 
   public unloadVRM(): void {
@@ -95,12 +141,11 @@ export default class Viewer {
   }
 
   /**
-   * で管理しているCanvasを後から設定する
+   * Reactで管理しているCanvasを後から設定する
    */
   public setup(canvas: HTMLCanvasElement) {
-    const parentElement = canvas.parentElement;
-    const width = parentElement?.clientWidth || canvas.width;
-    const height = parentElement?.clientHeight || canvas.height;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
     // renderer
     this._renderer = new THREE.WebGLRenderer({
       canvas: canvas,
@@ -112,17 +157,26 @@ export default class Viewer {
     this._renderer.setPixelRatio(window.devicePixelRatio);
 
     // camera
-    this._camera = new THREE.PerspectiveCamera(20.0, width / height, 0.1, 20.0);
-    this._camera.position.set(0, 1.3, 1.5);
-    this._cameraControls?.target.set(0, 1.3, 0);
-    this._cameraControls?.update();
+    this._camera = new THREE.PerspectiveCamera( 30.0, width / height, 0.1, 20.0 );
+
     // camera controls
     this._cameraControls = new OrbitControls(
       this._camera,
       this._renderer.domElement
     );
     this._cameraControls.screenSpacePanning = true;
+    //this._cameraControls?.target.set(0, 1.3, 0);
     this._cameraControls.update();
+
+    if(import.meta.env.APP_MODEL === "debug"){
+      // helpers
+			const gridHelper = new THREE.GridHelper( 10, 10 );
+			this._scene.add( gridHelper );
+
+			const axesHelper = new THREE.AxesHelper( 5 );
+			this._scene.add( axesHelper );
+
+    }
 
     window.addEventListener("resize", () => {
       this.resize();
@@ -177,9 +231,11 @@ export default class Viewer {
     if (this.model) {
       this.model.update(delta);
     }
+    
 
     if (this._renderer && this._camera) {
       this._renderer.render(this._scene, this._camera);
+      TWEEN.update();
     }
   };
 }

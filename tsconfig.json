@@ -28,6 +28,5 @@
 
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue","auto-imports.d.ts"],
-  "assetsInclude": ["./src/assets/**/*.fbx"],
   "references": [{ "path": "./tsconfig.node.json" }],
 }

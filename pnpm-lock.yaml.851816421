@@ -8,9 +8,6 @@ dependencies:
   '@pixiv/three-vrm':
     specifier: ^2.0.6
     version: 2.0.7(@types/three@0.159.0)(three@0.159.0)
-  '@tweenjs/tween.js':
-    specifier: ^21.0.0
-    version: 21.0.0
   pinia:
     specifier: ^2.1.7
     version: 2.1.7(typescript@5.3.2)(vue@3.3.9)
@@ -31,9 +28,6 @@ devDependencies:
   '@types/three':
     specifier: ^0.159.0
     version: 0.159.0
-  '@types/tweenjs':
-    specifier: ^1.0.8
-    version: 1.0.8
   '@vitejs/plugin-vue':
     specifier: ^4.5.0
     version: 4.5.0(vite@5.0.3)(vue@3.3.9)
@@ -524,14 +518,6 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: false
 
-  /@tweenjs/tween.js@21.0.0:
-    resolution: {integrity: sha512-qVfOiFh0U8ZSkLgA6tf7kj2MciqRbSCWaJZRwftVO7UbtVDNsZAXpWXqvCDtIefvjC83UJB+vHTDOGm5ibXjEA==}
-    dev: false
-
-  /@types/createjs-lib@0.0.32:
-    resolution: {integrity: sha512-Ildn5W6gb4OEvdeM+bZPVQr5n+TcEFBjHZQHgYzgFhQeW8HNJTd1SG2zYcw1jorzLUB9sS/3fGGlgEAxMVRrGw==}
-    dev: true
-
   /@types/estree@1.0.5:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
     dev: true
@@ -552,12 +538,6 @@ packages:
       '@types/webxr': 0.5.10
       fflate: 0.6.10
       meshoptimizer: 0.18.1
-
-  /@types/tweenjs@1.0.8:
-    resolution: {integrity: sha512-/HTVWu8c+AUJFK9P6b3LRzfodAYwDogtQKoH3ovZmnOY4aNJf+k3VqPx+D+AsLZP06AmoSLzqu9n/E5XCglCZw==}
-    dependencies:
-      '@types/createjs-lib': 0.0.32
-    dev: true
 
   /@types/webxr@0.5.10:
     resolution: {integrity: sha512-n3u5sqXQJhf1CS68mw3Wf16FQ4cRPNBBwdYLFzq3UddiADOim1Pn3Y6PBdDilz1vOJF3ybLxJ8ZEDlLIzrOQZg==}
