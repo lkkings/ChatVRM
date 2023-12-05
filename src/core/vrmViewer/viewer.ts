@@ -80,7 +80,6 @@ export default class Viewer {
     if (this.model?.vrm) {
       this.unloadVRM();
     }
-
     // gltf and vrm
     this.model = new Model(this._camera || new THREE.Object3D());
     this.model.loadVRM(url).then(async () => {
@@ -100,7 +99,7 @@ export default class Viewer {
       await this._initLoadSystemFbx();
       await this.model.loadSystemFBX(import.meta.env.APP_DEFAULT_DAILY);
       // 加载完成回调
-      if (onLoad) onLoad();
+      onLoad?.();
       // HACK: アニメーションの原点がずれているので再生後にカメラ位置を調整する
       requestAnimationFrame(() => {
         this.resetCamera();

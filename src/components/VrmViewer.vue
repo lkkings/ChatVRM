@@ -7,6 +7,7 @@ const onLoad = ()=>{
   useAppStore().loaded();
   viewer?.camera2position();
 }
+
 const initViewer = (ele: Element | null | globalThis.ComponentPublicInstance) => {
   if(!ele || ! (ele instanceof HTMLCanvasElement)) return;
   if(!viewer) return;

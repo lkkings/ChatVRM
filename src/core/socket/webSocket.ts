@@ -2,7 +2,7 @@
 const host = import.meta.env.APP_HOST;
 const baseUrl = import.meta.env.APP_WEBSOCKET_PATH;
 
-let socketInstance : WebSocket | null = null;
+export let socketInstance : WebSocket | null = null;
 
 
 export const connect= async (): Promise<WebSocket>=>{
@@ -22,7 +22,7 @@ export const connect= async (): Promise<WebSocket>=>{
     return socket;
 }
 
-const setupWebSocket = (handleWebSocketMessage: (event: MessageEvent) => void) => {
+export const setupWebSocket = (handleWebSocketMessage: (event: MessageEvent) => void) => {
 
     connect().then((webSocket) => {
         socketInstance = webSocket;

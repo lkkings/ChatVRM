@@ -34,7 +34,6 @@ export default class Model {
           lookAtPlugin: new VRMLookAtSmootherLoaderPlugin(parser),
         })
     );
-
     const gltf = await loader.loadAsync(url);
 
     const vrm = (this.vrm = gltf.userData.vrm);

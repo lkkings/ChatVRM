@@ -1,8 +1,13 @@
 import { defineStore } from 'pinia'
 export const useAppStore = defineStore("app",{
-    state: () => ({ isload: false}),
+    state: () => ({ 
+      isload: false,
+      isopenmenu:true,
+      isopenai: false}),
     getters: {
-      load: (state) => state.isload
+      load: (state) => state.isload,
+      openmenu:(state) => state.isopenmenu,
+      openai:(state)=> state.isopenai
     },
     actions: {
       loading() {
@@ -10,6 +15,18 @@ export const useAppStore = defineStore("app",{
       },
       loaded(){
         this.isload = false;
+      },
+      showMenu(){
+        this.isopenmenu = true;
+      },
+      hideMenu(){
+        this.isopenmenu = false;
+      },
+      openAI(){
+        this.isopenai = true;
+      },
+      closeAI(){
+        this.isopenai = false;
       }
     },
 })
