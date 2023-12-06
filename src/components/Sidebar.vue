@@ -3,7 +3,7 @@ import Viewer from '@/core/vrmViewer/viewer';
 import Icon from './Icon.vue';
 import { useAppStore } from '@/store';
 import {fetchAudio} from '@/api'
-import {setupWebSocket, socketInstance} from '@/core/socket/webSocket'
+import {setupWebSocket,closeWebSocket} from '@/core/socket/webSocket'
 import {Screenplay, textsToScreenplay, EmotionType} from '@/core/message/message'
 
 
@@ -79,9 +79,7 @@ const handleWebSocketMessage = async (event: MessageEvent) => {
 const openOrHideMenu = () => appStore.isopenmenu?appStore.hideMenu():appStore.showMenu();
 const openOrCloseAI = () => {
   if(appStore.isopenai){
-    if(socketInstance != null){
-      socketInstance.close()
-    }
+    closeWebSocket();
     console.log(">>>> closeWebSocket")
     appStore.closeAI();
   }else{

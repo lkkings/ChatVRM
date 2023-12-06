@@ -51,7 +51,7 @@ export default class Viewer {
     if (!this.model?.vrm) return; 
     this.model.clipMap.set("idle_01",await loadMixamoAnimation("daily/idle_01.fbx",this.model.vrm));
     this.model.clipMap.set("idle_02",await loadMixamoAnimation("daily/idle_02.fbx",this.model.vrm));
-    this.model.clipMap.set("idle_03",await loadMixamoAnimation("daily/idle_03.fbx",this.model.vrm));
+    //this.model.clipMap.set("idle_03",await loadMixamoAnimation("daily/idle_03.fbx",this.model.vrm));
     this.model.clipMap.set("idle_happy_01",await loadMixamoAnimation("daily/idle_happy_01.fbx",this.model.vrm));
     this.model.clipMap.set("idle_happy_02",await loadMixamoAnimation("daily/idle_happy_02.fbx",this.model.vrm));
     this.model.clipMap.set("idle_happy_03",await loadMixamoAnimation("daily/idle_happy_03.fbx",this.model.vrm));

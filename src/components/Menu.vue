@@ -3,7 +3,6 @@ import Icon from '@/components/Icon.vue'
 import { useAppStore } from '@/store';
 const cameraIsOpen = ref(false);
 const openOrCloseCamera = ()=>{
-  console.log("====================")
   cameraIsOpen.value = !cameraIsOpen.value;
 }
 </script>
