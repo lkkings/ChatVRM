@@ -5,12 +5,19 @@ import { useAppStore } from '@/store';
 import {fetchAudio} from '@/api'
 import {setupWebSocket,closeWebSocket} from '@/core/socket/webSocket'
 import {Screenplay, textsToScreenplay, EmotionType} from '@/core/message/message'
+import {sleep} from '@/utils/commonUtil'
 
-
+let lastTime = 0;
 const appStore = useAppStore();
 const viewer = inject<Viewer>("viewer");
 const handleSpeakAi = async (screenplay: Screenplay, onStart?: () => void,onEnd?: () => void)=>{
+  console.log("speak",screenplay.talk.message)
+  const now = Date.now();
+      if (now - lastTime < 1000) {
+        await sleep(1000 - (now - lastTime));
+      }
   const audioBuffer = await fetchAudio(screenplay.talk.message);
+  lastTime = Date.now();
   onStart?.();
   if (!audioBuffer || !viewer) {
     return;
@@ -56,22 +63,23 @@ const handleDanmakuMessage = async (content: string,emote: string,action: string
 const handleWebSocketMessage = async (event: MessageEvent) => {
   const data = event.data;
   const chatMessage = JSON.parse(data);
-  const type = chatMessage.message.type;
+  console.log(`message`,chatMessage);
+  const type = chatMessage.type;
   if (type === "user") {
     await handleUserMessage(
-      chatMessage.message.content,
-      chatMessage.message.emote,
+      chatMessage.content,
+      chatMessage.emote,
     );
   } else if (type === "behavior_action") {
     await handleBehaviorAction(
-      chatMessage.message.content,
-      chatMessage.message.emote,
+      chatMessage.content,
+      chatMessage.emote,
     );
   } else if (type === "danmaku") {
     await handleDanmakuMessage(
-      chatMessage.message.content,
-      chatMessage.message.emote,
-      chatMessage.message.action
+      chatMessage.content,
+      chatMessage.emote,
+      chatMessage.action
     );
   }
 };

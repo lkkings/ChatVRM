@@ -12,6 +12,8 @@
     "@pixiv/three-vrm": "^2.0.6",
     "@tweenjs/tween.js": "^21.0.0",
     "axios": "^1.6.2",
+    "axios-jsonp": "^1.0.4",
+    "kalidokit": "^1.1.5",
     "pinia": "^2.1.7",
     "three": "^0.159.0",
     "vite-svg-loader": "^5.1.0",

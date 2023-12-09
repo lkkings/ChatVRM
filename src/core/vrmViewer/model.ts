@@ -62,7 +62,7 @@ export default class Model {
     const animationClip = clipMap.get(animationUrl)
     const currentClip = current_clipMap.get("current")
     if (vrm == null || mixer == null || animationClip == null) {
-      throw new Error("You have to load VRM first");
+      throw new Error("You have to load VRM OR FBX first");
     }
 
     if (currentClip != null) {

@@ -21,11 +21,10 @@ const name = import.meta.env.APP_NAME
 <style scoped>
 .load-contanter{
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 1);
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -33,6 +32,7 @@ const name = import.meta.env.APP_NAME
 }
 .loading-overlay{
   position: relative;
+  text-align: center;
   width: 100%;
   height: 100%;
 }
@@ -40,6 +40,8 @@ const name = import.meta.env.APP_NAME
   position: absolute;
   top: 50%;
   left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
   width: 200px;
   height: 40px;
 }

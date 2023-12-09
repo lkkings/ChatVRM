@@ -9,6 +9,18 @@ export default defineConfig({
   plugins: [vue(), AutoImport({
     imports: ['vue','pinia']
   }),svgLoader()],
+  server: {
+    cors: true,
+    proxy: {
+      // 将需要跨域请求的路径映射到目标地址
+      '/api': {
+        target: "http://127.0.0.1:8000",
+        changeOrigin: true,
+        //rewrite: (path) => path.replace(/\/api/, "/api"), 
+        // 设置额外的请求头部信息
+      }
+    }
+  },
   envPrefix:'APP_',
   resolve: {
     alias: {
