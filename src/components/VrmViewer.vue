@@ -2,7 +2,7 @@
 import Viewer from '@/core/vrmViewer/viewer';
 import {useAppStore} from '@/store';
 useAppStore().loading()
-const viewer = inject<Viewer>('viewer');
+const viewer = inject<Viewer>('viewer') as Viewer;
 const onLoad = ()=>{
   useAppStore().loaded();
   viewer?.camera2position();
@@ -46,7 +46,6 @@ const initViewer = (ele: Element | null | globalThis.ComponentPublicInstance) =>
     }
   });
 }
-
 </script>
 
 <template>

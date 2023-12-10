@@ -9,10 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mediapipe/camera_utils": "^0.3.1675466862",
+    "@mediapipe/drawing_utils": "^0.3.1675466124",
+    "@mediapipe/holistic": "^0.5.1675471629",
     "@pixiv/three-vrm": "^2.0.6",
     "@tweenjs/tween.js": "^21.0.0",
     "axios": "^1.6.2",
-    "axios-jsonp": "^1.0.4",
     "kalidokit": "^1.1.5",
     "pinia": "^2.1.7",
     "three": "^0.159.0",
@@ -20,7 +22,6 @@
     "vue": "^3.3.8"
   },
   "devDependencies": {
-    "@types/node": "^20.10.2",
     "@types/three": "^0.159.0",
     "@vitejs/plugin-vue": "^4.5.0",
     "typescript": "^5.2.2",

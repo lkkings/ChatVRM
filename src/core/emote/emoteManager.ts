@@ -12,6 +12,7 @@ import AutoBlink  from "./autoBlink";
  * 前の表情が終わるまで待ってから表情適用する役割を持っている。
  */
 export class ExpressionManager {
+
   private _autoBlink?: AutoBlink;
   private _expressionManager?: VRMExpressionManager;
   private _currentEmotion: VRMExpressionPresetName;
@@ -27,6 +28,7 @@ export class ExpressionManager {
       this._autoBlink = new AutoBlink(vrm.expressionManager);
     }
   }
+
 
   public playEmotion(preset: VRMExpressionPresetName) {
     if (this._currentEmotion != "neutral") {
@@ -60,7 +62,6 @@ export class ExpressionManager {
     if (this._autoBlink) {
       this._autoBlink.update(delta);
     }
-
     if (this._currentLipSync) {
       const weight =
         this._currentEmotion === "neutral"
@@ -82,6 +83,7 @@ export default class EmoteManager {
   constructor(vrm: VRM) {
     this._expressionManager = new ExpressionManager(vrm);
   }
+
 
   public playEmotion(preset: VRMExpressionPresetName) {
     this._expressionManager.playEmotion(preset);

@@ -2,6 +2,7 @@ import * as THREE from "three";
 import Model from "./model";
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { loadMixamoAnimation } from "@/lib/VRMAnimation/loadMixamoAnimation.ts";
+import {Results} from "@mediapipe/holistic"
 import * as TWEEN from "@tweenjs/tween.js";
 
 /**
@@ -13,6 +14,7 @@ export default class Viewer {
   public isReady: boolean;
   public model?: Model;
 
+  private _inputVideo?: HTMLVideoElement;
   private _renderer?: THREE.WebGLRenderer;
   private _clock: THREE.Clock;
   private _scene: THREE.Scene;
@@ -119,7 +121,6 @@ export default class Viewer {
     new TWEEN.Tween(initialPosition)
       .to(position, 2000)
       .onUpdate(() => {
-        console.log(position)
         this._camera?.position.set(
           this._camera.position.x,
           initialPosition.y,
@@ -137,6 +138,21 @@ export default class Viewer {
       this._scene.remove(this.model.vrm.scene);
       this.model?.unLoadVrm();
     }
+  }
+
+  public capture(results: Results){
+    this.model?.captureUpdate(results,this._inputVideo);
+  }
+
+  public bootCapture(video: HTMLVideoElement){
+    if(!this.model) return;
+    this._inputVideo = video;
+    this.model.enableCapture = true;
+  }
+
+  public shutCapture(){
+    if(!this.model) return;
+    this.model.enableCapture = false;
   }
 
   /**

@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import Icon from '@/components/Icon.vue'
 import { useAppStore } from '@/store';
-const cameraIsOpen = ref(false);
+const appStore = useAppStore();
 const openOrCloseCamera = ()=>{
-  cameraIsOpen.value = !cameraIsOpen.value;
+  if(appStore.isopencamera){
+    appStore.closeCamera();
+  }else{
+    appStore.openCarmera();
+  }
 }
 </script>
 <template>
   <div class="menu-contanter">
     <transition name="bounce">
-    <div v-if="useAppStore().openmenu" class="button-container">
+    <div v-if="appStore.openmenu" class="button-container">
         <Icon name="mao"/>
-        <button @click="openOrCloseCamera" class="video-btn" :title="cameraIsOpen?'关闭相机':'打开相机'">
-          <Icon v-if="cameraIsOpen" name="video" class="icon" fill="#23a5d0"/>
+        <button @click="openOrCloseCamera" class="video-btn" :title="appStore.opencamera?'关闭相机':'打开相机'">
+          <Icon v-if="appStore.opencamera" name="video" class="icon" fill="#23a5d0"/>
           <Icon v-else name="video" class="nion-icon"/>
         </button>
         <button class="menu-item phone" title="视频聊天">
@@ -29,6 +33,7 @@ const openOrCloseCamera = ()=>{
         </button>
     </div>
     </transition>
+
   </div>
 </template>
   
