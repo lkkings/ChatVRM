@@ -17,9 +17,13 @@ const isShowPhone = ref(false);
 const isConnected = ref(false);
 const roomId = ref("");
 const webrtc = inject<WebRTCClient>("webrtc") as WebRTCClient;
-const connect = (text:string)=>{
-  console.log(text);
-}
+const joinRoom = (text:string)=>webrtc.joinRoom(text,(message)=>{
+  webrtc.leaveRoom()
+});
+const createRoom = ()=>webrtc.createRoom((message)=>{
+  roomId.value = message["room"];
+  isConnected.value = true;
+}); 
 const shareLink = ()=>{
   // 创建一个临时input元素，将当前页面的URL赋值给它
   const tempInput = document.createElement('input');
@@ -31,12 +35,18 @@ const shareLink = ()=>{
   document.body.removeChild(tempInput);
   showMessage("Copy Link Success!");
 }
+const openPhone = ()=>{
+  webrtc.setupSignalingChannel((success: any)=>{
+    console.log("success",success);
+    isShowPhone.value=true;
+  },(error:any)=>{
+    console.log("error",error);
+    showMessage(error["message"]);
+  });
+}
 const onPhoneShow = ()=>{
   console.log("Show Phone")
-  webrtc.setupSignalingChannel((room:string)=>{
-    roomId.value = room;
-    isConnected.value = true;
-  })
+  
 }
 const onPhoneHide = ()=>{
   console.log("Hide Phone")
@@ -45,15 +55,18 @@ const onPhoneHide = ()=>{
 </script>
 <template>
   <!-- 通话连接侧边栏弹出 -start-->
-  <n-drawer :on-after-enter="onPhoneShow" :on-after-leave="onPhoneHide"  v-model:show="isShowPhone" placement="left" :mask-closable="false" :default-width="400" drawer-style="background-color: #2E525F;">
+  <n-drawer :on-after-enter="onPhoneShow" :on-after-leave="onPhoneHide"  v-model:show="isShowPhone" placement="left" :mask-closable="false" :default-width="400" style="background-color: #2E525F;">
     <button class="close" title="关闭窗口" @click="isShowPhone=false">
       <Icon name="close"/>
     </button>
     <n-card style="max-width: 300px;background: #00000030;left: 50px;top: 200px;">
-      <Password confirmText="CONNECT" @confirm="connect"></Password>
+      <Password confirmText="CONNECT" @confirm="joinRoom"></Password>
     </n-card>
-    <button :disabled="!isConnected" @click="shareLink" class="share-button" style="left:50px;top: 400px;width:300px">
-      {{isConnected?'Share Your ChatID: #'+roomId:"Server Connecting ......"}}
+    <button v-if="isConnected" @click="shareLink" class="share-button" style="left:50px;top: 400px;width:300px">
+      Share Your ChatID: #{{roomId}}
+    </button>
+    <button v-else @click="createRoom" class="share-button" style="left:50px;top: 400px;width:300px">
+      Click To Create Chat Room!
     </button>
   </n-drawer>
    <!-- 通话连接侧边栏弹出 -end-->
@@ -65,7 +78,7 @@ const onPhoneHide = ()=>{
           <Icon v-if="appStore.opencamera" name="video" class="icon" fill="#23a5d0"/>
           <Icon v-else name="video" class="nion-icon"/>
         </button>
-        <button class="menu-item phone" title="视频聊天" @click="isShowPhone=true">
+        <button class="menu-item phone" title="视频聊天" @click="openPhone">
           <Icon name="phone"/>
         </button>
         <button class="menu-item sticker" title="贴纸">

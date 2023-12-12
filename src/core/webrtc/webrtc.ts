@@ -4,6 +4,7 @@ export default class WebRTCClient {
     private readonly _configuration: RTCConfiguration;
     private _signalingChannel: WebSocket | null = null;
     private _timer?: any = null;
+    private _eventMap = new Map();
 
 
     public isAudioMuted = false;
@@ -17,24 +18,24 @@ export default class WebRTCClient {
       this._localStream = canvas.captureStream(30);
     }
 
-    public setupSignalingChannel(onSuccess?:(roomId:string)=>void){
+    public setupSignalingChannel(onSuccess?:(message:any)=>void, onError?:(message:any)=>void){
        this._signalingChannel = new WebSocket(import.meta.env.APP_WEBRTC_WS_URL);
        this._signalingChannel.onopen = () => {
         console.log('WebSocket connection established.');
+        this._eventMap.set("success",onSuccess);
+        this._eventMap.set("error",onError);
        };
        this._signalingChannel.onclose = (event) => {
        console.log('WebSocket connection closed:', event);
         console.log('Reconnecting...');
         // 重新连接，每隔1秒尝试一次
         this._timer = setTimeout(() => {
-            this.setupSignalingChannel(onSuccess);
+            this.setupSignalingChannel(onSuccess,onError);
         }, 1000);
        };
        this._signalingChannel.onmessage = (event) => {
         const message = JSON.parse(event.data);
-        if (message.type === "success") {
-            onSuccess?.(message["room"]);
-        }
+        this._eventMap.get(message.type)?.(message);
         this._handleSignalingMessages(message);
        }
 
@@ -45,9 +46,15 @@ export default class WebRTCClient {
         clearTimeout(this._timer);
         this._timer = null;
     }
+
+    public createRoom(onSuccess?:(message:any)=>void){
+      this._eventMap.set("created",onSuccess);
+      this._signalingChannel?.send(JSON.stringify({ type: 'create'}));
+    }
   
-    public async joinRoom(roomId: string): Promise<void> {
+    public async joinRoom(roomId: string,onSuccess?:(message:any)=>void): Promise<void> {
       try {
+        this._eventMap.set("joined",onSuccess);
         this._peerConnection = new RTCPeerConnection(this._configuration);
         this._localStream?.getTracks().forEach(track => {
           this._peerConnection?.addTrack(track, this._localStream!);
@@ -71,7 +78,8 @@ export default class WebRTCClient {
       }
     }
   
-    public async leaveRoom(): Promise<void> {
+    public leaveRoom(onSuccess?:(message:any)=>void): void {
+      this._eventMap.set("left",onSuccess);
       if (this._peerConnection) {
         this._peerConnection.close();
         this._peerConnection = null;
@@ -80,6 +88,8 @@ export default class WebRTCClient {
         this._localStream.getTracks().forEach(track => track.stop());
         this._localStream = null;
       }
+      this._signalingChannel?.send(JSON.stringify({ type: 'join', room: roomId, sdp: this._peerConnection.localDescription }));
+    
     }
   
     public toggleAudioMute(): void {
