@@ -19,11 +19,15 @@
     "pinia": "^2.1.7",
     "three": "^0.159.0",
     "vite-svg-loader": "^5.1.0",
-    "vue": "^3.3.8"
+    "vue": "^3.3.8",
+    "webrtc": "^1.14.1",
+    "ws": "^8.15.0"
   },
   "devDependencies": {
     "@types/three": "^0.159.0",
+    "@types/webrtc": "^0.0.41",
     "@vitejs/plugin-vue": "^4.5.0",
+    "naive-ui": "^2.35.0",
     "typescript": "^5.2.2",
     "unplugin-auto-import": "^0.17.1",
     "vite": "^5.0.0",

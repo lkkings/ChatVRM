@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import Viewer from "@/core/vrmViewer/viewer";
+import Viewer from "@/core/viewer/viewer";
 import {Results,Holistic,POSE_CONNECTIONS,FACEMESH_TESSELATION,HAND_CONNECTIONS} from "@mediapipe/holistic"
 import {drawConnectors, drawLandmarks} from "@mediapipe/drawing_utils"
 import {Camera} from "@mediapipe/camera_utils"
 const viewer = inject<Viewer>("viewer") as Viewer
 const videoRef = ref(null);
+const isShow = ref(true);
 console.log(videoRef.value)
 let camera: Camera | null = null;
 const holistic = new Holistic({
@@ -88,12 +89,15 @@ onMounted(()=>{
 });
 onBeforeUnmount(()=>{
     console.log("Close Carmera!");
-    camera?.stop();
     viewer.shutCapture();
+    camera?.stop();
 });
 </script>
 <template>
-  <div class="video-contanter">
+  <div class="video-contanter" v-show="isShow">
+    <button class="close" title="关闭窗口" @click="isShow=false">
+      <Icon name="close"/>
+    </button>
     <div class="preview">
       <canvas class="guides" id="guides"></canvas>
       <video class="input-video" ref="videoRef" autoplay muted playsinline></video>
@@ -101,10 +105,22 @@ onBeforeUnmount(()=>{
   </div>
 </template>
 <style>
+.close{
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: none;
+  outline: none;
+  top: 16px;
+  left: 390px;
+  background-color: rgba(0, 60, 255, 0); 
+  padding: 0;
+  z-index: 2;
+}
 .guides {
   display: block;
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   height: 100%;
   width: 100%;

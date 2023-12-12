@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Viewer from '@/core/vrmViewer/viewer';
+import Viewer from '@/core/viewer/viewer';
 import Icon from './Icon.vue';
 import { useAppStore } from '@/store';
 import {fetchAudio} from '@/api'

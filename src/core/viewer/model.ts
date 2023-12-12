@@ -113,15 +113,16 @@ export default class Model {
 
     //PUPILS
     //interpolate pupil and keep a copy of the value
+    const pitch = lerp(this._oldLookTarget.y, riggedFace.pupil.x, .4)
     let lookTarget =
       new THREE.Euler(
         lerp(this._oldLookTarget.x , riggedFace.pupil.y, .4),
-        lerp(this._oldLookTarget.y, riggedFace.pupil.x, .4),
+        pitch,
         0,
         "XYZ"
       )
     this._oldLookTarget.copy(lookTarget)
-    this.vrm.lookAt?.applier.lookAt(lookTarget);
+    this.vrm.lookAt?.applier.applyYawPitch(0,pitch);
   }
 
   private _rigPosition(name: VRMHumanBoneName,position = { x: 0, y: 0, z: 0 },dampener = 1,lerpAmount = 0.3){

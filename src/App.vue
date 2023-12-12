@@ -7,6 +7,7 @@ import Video from './components/Video.vue';
 import {useAppStore} from '@/store';
 
 const appStore = useAppStore();
+
 </script>
 <template>
   <Loading/>
@@ -14,7 +15,7 @@ const appStore = useAppStore();
   <VrmViewer/>
   <Menu/>
   <transition name="bounce">
-    <Video v-if="appStore.opencamera"/>
+    <Video v-if="appStore.opencamera" v-show="appStore.showMenu"/>
   </transition>
   
 </template>

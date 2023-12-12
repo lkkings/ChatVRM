@@ -1,6 +1,5 @@
 
-const host = import.meta.env.APP_HOST;
-const baseUrl = import.meta.env.APP_WEBSOCKET_PATH;
+const wsUrl = import.meta.env.APP_AI_WS_URL;
 
 let timer: any = null;
 
@@ -14,7 +13,7 @@ export const closeWebSocket = ()=>{
 }
 
 export const setupWebSocket = (handleWebSocketMessage: (event: MessageEvent) => void,onSuccess?:()=>{}) => {
-    const socketInstance = new WebSocket(`ws://${host}${baseUrl}`);
+    const socketInstance = new WebSocket(wsUrl);
     socketInstance.onopen = () => {
         console.log('WebSocket connection established.');
         onSuccess?.();

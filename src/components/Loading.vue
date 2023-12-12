@@ -9,7 +9,7 @@ const name = import.meta.env.APP_NAME
     <div class="load-contanter" v-show="store.load">
         <div class="loading-overlay"> 
           <div class="app-name">
-            <svg  preserveAspectRatio="none" viewBox="0 0 40 10" class="nion-icon" xmlns="http://www.w3.org/2000/svg">
+            <svg  preserveAspectRatio="none" viewBox="0 0 50 10" class="nion-icon" xmlns="http://www.w3.org/2000/svg">
                 <text x="0" y="10" font-family="Arial" font-size="10">{{ name }}</text>
             </svg>
           </div>

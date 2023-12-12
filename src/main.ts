@@ -4,12 +4,13 @@ import App from './App.vue'
 import Icon from './components/Icon.vue';
 import { createPinia } from 'pinia';
 import '@/store/index'
-import {viewer} from '@/core/vrmViewer/provider';
-
+import {viewer} from '@/core/viewer/provider';
+import {webrtc} from '@/core/webrtc/provider'
 
 const app = createApp(App);
 
 app.provide("viewer",viewer);
+app.provide("webrtc",webrtc);
 
 app.component("Icon",Icon);
 

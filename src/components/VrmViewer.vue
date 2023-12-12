@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import Viewer from '@/core/vrmViewer/viewer';
+import Viewer from '@/core/viewer/viewer';
+import WebRTCClient from '@/core/webrtc/webrtc';
 import {useAppStore} from '@/store';
 useAppStore().loading()
 const viewer = inject<Viewer>('viewer') as Viewer;
+const webrtc = inject<WebRTCClient>('webrtc') as WebRTCClient;
 const onLoad = ()=>{
   useAppStore().loaded();
   viewer?.camera2position();
@@ -13,6 +15,7 @@ const initViewer = (ele: Element | null | globalThis.ComponentPublicInstance) =>
   if(!viewer) return;
   const canvas = <HTMLCanvasElement> ele;
   viewer.setup(canvas);
+  webrtc.setup(canvas);
   viewer.loadVrm(import.meta.env.APP_EDFAULT_VRM, onLoad);
   canvas.addEventListener("dragover", function (event) {
     event.preventDefault();
