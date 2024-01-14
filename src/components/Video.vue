@@ -6,7 +6,6 @@ import {Camera} from "@mediapipe/camera_utils"
 const viewer = inject<Viewer>("viewer") as Viewer
 const videoRef = ref(null);
 const isShow = ref(true);
-console.log(videoRef.value)
 let camera: Camera | null = null;
 const holistic = new Holistic({
   locateFile: file => {
@@ -35,7 +34,7 @@ onMounted(()=>{
   let guideCanvas = <HTMLCanvasElement> document.getElementById("guides");
   const onResults = (results:Results) => {
     // Draw landmark guides
-    drawResults(results)
+    drawResults(results);
     // Animate model
     viewer?.capture(results);
   }
@@ -115,7 +114,6 @@ onBeforeUnmount(()=>{
   left: 390px;
   background-color: rgba(0, 60, 255, 0); 
   padding: 0;
-  z-index: 2;
 }
 .guides {
   display: block;
@@ -128,6 +126,7 @@ onBeforeUnmount(()=>{
   transform: scale(-1, 1);
 }
 .preview {
+  z-index: 9999;
   position: absolute;
   top: 16px;
   left: 16px;

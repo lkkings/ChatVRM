@@ -1,8 +1,27 @@
 export const sleep = async (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-export const showMessage = (messageStr:string,time=1000)=>{
-      // 创建一个提示消息元素并显示提示消息
+
+/**
+ * 获取当前时间的函数，
+ * @returns  返回格式化的字符串
+ */
+export const getCurrentTime = ():string=> {
+  const now = new Date();
+  const hours = now.getHours().toString().padStart(2, '0'); // 将小时格式化为两位数
+  const minutes = now.getMinutes().toString().padStart(2, '0'); // 将分钟格式化为两位数
+  const seconds = now.getSeconds().toString().padStart(2, '0'); // 将秒数格式化为两位数
+
+  return `${hours}:${minutes}:${seconds}`;
+}
+
+
+/**
+ * 展示提示消息
+ * @param messageStr 提示消息
+ * @param time 展示时间
+ */
+export const showMessage = (messageStr:string,time=1000):void=>{
       const message = document.createElement('div');
       message.textContent = messageStr;
       message.style.cssText = `
@@ -18,8 +37,6 @@ export const showMessage = (messageStr:string,time=1000)=>{
         z-index: 9999;
       `;
       document.body.appendChild(message);
-
-      // 3秒后隐藏提示消息
       setTimeout(() => {
         document.body.removeChild(message);
       }, time);

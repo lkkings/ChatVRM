@@ -4,13 +4,15 @@ export const useAppStore = defineStore("app",{
       isload: false,
       isopenmenu:true,
       isopenai: false,
-      isopencamera: false
+      isopencamera: false,
+      isopenviewer: true
     }),
     getters: {
       load: (state) => state.isload,
       openmenu:(state) => state.isopenmenu,
       openai:(state)=> state.isopenai,
-      opencamera:(state)=> state.isopencamera
+      opencamera:(state)=> state.isopencamera,
+      openviewer:(state)=> state.isopenviewer,
     },
     actions: {
       loading() {
@@ -37,5 +39,11 @@ export const useAppStore = defineStore("app",{
       closeCamera(){
         this.isopencamera = false;
       },
+      openViewer(){
+        this.isopenviewer = true;
+      },
+      closeViewer(){
+        this.isopenviewer = false;
+      }
     },
 })

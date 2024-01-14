@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import Viewer from '@/core/viewer/viewer';
-import WebRTCClient from '@/core/webrtc/webrtc';
 import {useAppStore} from '@/store';
-useAppStore().loading()
+const store = useAppStore()
+store.openViewer();
+store.loading()
 const viewer = inject<Viewer>('viewer') as Viewer;
-const webrtc = inject<WebRTCClient>('webrtc') as WebRTCClient;
 const onLoad = ()=>{
-  useAppStore().loaded();
+  store.loaded();
   viewer?.camera2position();
 }
 
@@ -15,7 +15,6 @@ const initViewer = (ele: Element | null | globalThis.ComponentPublicInstance) =>
   if(!viewer) return;
   const canvas = <HTMLCanvasElement> ele;
   viewer.setup(canvas);
-  webrtc.setup(canvas);
   viewer.loadVrm(import.meta.env.APP_EDFAULT_VRM, onLoad);
   canvas.addEventListener("dragover", function (event) {
     event.preventDefault();
@@ -52,12 +51,12 @@ const initViewer = (ele: Element | null | globalThis.ComponentPublicInstance) =>
 </script>
 
 <template>
-<div class="fullscreen">
-  <canvas :ref="(ele)=>initViewer(ele)"></canvas>
+<div class="canvas-contanter"  id="canvas-contanter" v-show="store.openviewer">
+  <canvas id="canvas" :ref="(ele)=>initViewer(ele)"></canvas>
 </div>
 </template>
 <style>
-.fullscreen {
+.canvas-contanter {
   height: 100%; 
   margin: 0;
   padding: 0;

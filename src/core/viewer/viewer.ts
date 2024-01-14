@@ -22,6 +22,7 @@ export default class Viewer {
   private _cameraControls?: OrbitControls;
   private _loader?: THREE.TextureLoader;
 
+
   constructor() {
     this.isReady = false;
 
@@ -169,7 +170,7 @@ export default class Viewer {
     });
     this._renderer.outputEncoding = THREE.sRGBEncoding;
     this._renderer.setSize(width, height);
-    this._renderer.setPixelRatio(window.devicePixelRatio);
+    this._renderer.setPixelRatio(window.devicePixelRatio); 
 
     // camera
     this._camera = new THREE.PerspectiveCamera( 30.0, width / height, 0.1, 20.0 );
@@ -194,31 +195,13 @@ export default class Viewer {
     }
 
     window.addEventListener("resize", () => {
-      this.resize();
+      if(!this._renderer) return;
+      const parentElement = this._renderer.domElement.parentElement;
+      if(parentElement)
+      this.resize(parentElement.clientWidth,parentElement.clientHeight);
     });
     this.isReady = true;
     this.update();
-  }
-
-  /**
-   * canvasの親要素を参照してサイズを変更する
-   */
-  public resize() {
-    if (!this._renderer) return;
-
-    const parentElement = this._renderer.domElement.parentElement;
-    if (!parentElement) return;
-
-    this._renderer.setPixelRatio(window.devicePixelRatio);
-    this._renderer.setSize(
-      parentElement.clientWidth,
-      parentElement.clientHeight
-    );
-
-    if (!this._camera) return;
-    this._camera.aspect =
-      parentElement.clientWidth / parentElement.clientHeight;
-    this._camera.updateProjectionMatrix();
   }
 
   /**
@@ -253,4 +236,15 @@ export default class Viewer {
       TWEEN.update();
     }
   };
+
+
+  public resize(width:number,height:number){
+    if (!this._renderer) return;
+    this._renderer.setPixelRatio(window.devicePixelRatio);
+    this._renderer.setSize(width,height);
+
+    if (!this._camera) return;
+    this._camera.aspect = width / height;
+    this._camera.updateProjectionMatrix();
+  }
 }

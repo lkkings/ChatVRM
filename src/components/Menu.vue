@@ -3,9 +3,15 @@ import Icon from '@/components/Icon.vue'
 import { useAppStore } from '@/store';
 import {NDrawer,NCard } from 'naive-ui'
 import Password from '@/components/Password.vue';
-import {showMessage} from '@/utils/commonUtil'
-import WebRTCClient from '@/core/webrtc/webrtc'
+import {showMessage} from '@/utils/commonUtil';
+import WebRTCClient from '@/core/webrtc/webrtc';
+
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 const appStore = useAppStore();
+const webrtc = inject<WebRTCClient>("webrtc") as WebRTCClient;
+
 const openOrCloseCamera = ()=>{
   if(appStore.isopencamera){
     appStore.closeCamera();
@@ -16,27 +22,40 @@ const openOrCloseCamera = ()=>{
 const isShowPhone = ref(false);
 const isConnected = ref(false);
 const roomId = ref("");
-const webrtc = inject<WebRTCClient>("webrtc") as WebRTCClient;
 const connect = (text:string)=>{
-  console.log(text);
+  webrtc.visit(text,()=>{
+    router.push({
+      path: "/room",
+      query: {
+        id: text ,
+      }
+    });
+  },(message)=>{
+    showMessage(message);
+  });
 }
 const shareLink = ()=>{
-  // 创建一个临时input元素，将当前页面的URL赋值给它
-  const tempInput = document.createElement('input');
-  tempInput.value = window.location.href+"?room="+roomId.value;
-  document.body.appendChild(tempInput);
-  // 选择临时input元素中的文本内容并执行复制操作
-  tempInput.select();
-  document.execCommand('copy');
-  document.body.removeChild(tempInput);
-  showMessage("Copy Link Success!");
+  const text = import.meta.env.APP_URL+"?room="+roomId.value;
+  navigator.clipboard.writeText(text).then(function() {
+    showMessage("Copy Link Success!");
+  }).catch(function() {
+    showMessage("Copy Link Fail!");
+  });
 }
-const onPhoneShow = ()=>{
-  console.log("Show Phone")
-  webrtc.setupSignalingChannel((room:string)=>{
-    roomId.value = room;
-    isConnected.value = true;
-  })
+const onPhoneShow = async ()=>{
+  console.log("Show Phone");
+  webrtc.connect(()=>{
+    webrtc.createRoom((room:string)=>{
+      roomId.value = room;
+      isConnected.value = true;
+    },()=>router.push({
+      path: "/room",
+      query: {
+        id: roomId.value ,
+      }
+    }));
+  });
+
 }
 const onPhoneHide = ()=>{
   console.log("Hide Phone")
@@ -45,7 +64,7 @@ const onPhoneHide = ()=>{
 </script>
 <template>
   <!-- 通话连接侧边栏弹出 -start-->
-  <n-drawer :on-after-enter="onPhoneShow" :on-after-leave="onPhoneHide"  v-model:show="isShowPhone" placement="left" :mask-closable="false" :default-width="400" drawer-style="background-color: #2E525F;">
+  <n-drawer :on-after-enter="onPhoneShow" :on-after-leave="onPhoneHide"  v-model:show="isShowPhone" placement="left" :mask-closable="false" :default-width="400" style="background-color: #2E525F;">
     <button class="close" title="关闭窗口" @click="isShowPhone=false">
       <Icon name="close"/>
     </button>
@@ -57,30 +76,32 @@ const onPhoneHide = ()=>{
     </button>
   </n-drawer>
    <!-- 通话连接侧边栏弹出 -end-->
-  <div class="menu-contanter">
+  
     <transition name="bounce">
-    <div v-if="appStore.openmenu" class="button-container">
-        <Icon name="mao"/>
-        <button @click="openOrCloseCamera" class="video-btn" :title="appStore.opencamera?'关闭相机':'打开相机'">
-          <Icon v-if="appStore.opencamera" name="video" class="icon" fill="#23a5d0"/>
-          <Icon v-else name="video" class="nion-icon"/>
-        </button>
-        <button class="menu-item phone" title="视频聊天" @click="isShowPhone=true">
-          <Icon name="phone"/>
-        </button>
-        <button class="menu-item sticker" title="贴纸">
-          <Icon name="sticker"/>
-        </button>
-        <button class="menu-item character" title="角色">
-          <Icon name="character"/>
-        </button>
-        <button class="menu-item background" title="背景图片">
-          <Icon name="background"/>
-        </button>
-    </div>
+      <div id="menu-container">
+        <div v-if="appStore.openmenu" class="button-container">
+            <Icon name="mao"/>
+            <button @click="openOrCloseCamera" class="video-btn" :title="appStore.opencamera?'关闭相机':'打开相机'">
+              <Icon v-if="appStore.opencamera" name="video" class="icon" fill="#23a5d0"/>
+              <Icon v-else name="video" class="nion-icon"/>
+            </button>
+            <button class="menu-item phone" title="视频聊天" @click="isShowPhone=true">
+              <Icon name="phone"/>
+            </button>
+            <button class="menu-item sticker" title="贴纸">
+              <Icon name="sticker"/>
+            </button>
+            <button class="menu-item character" title="角色">
+              <Icon name="character"/>
+            </button>
+            <button class="menu-item background" title="背景图片">
+              <Icon name="background"/>
+            </button>
+        </div>
+      </div>
     </transition>
 
-  </div>
+ 
 </template>
   
 <style scoped>
@@ -100,6 +121,10 @@ const onPhoneHide = ()=>{
   100% {
     transform: scale(1);
   }
+}
+
+#menu-container{
+  position: relative;
 }
 .share-button{
   position: absolute;

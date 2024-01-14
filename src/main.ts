@@ -4,6 +4,7 @@ import App from './App.vue'
 import Icon from './components/Icon.vue';
 import { createPinia } from 'pinia';
 import '@/store/index'
+import router from './router';
 import {viewer} from '@/core/viewer/provider';
 import {webrtc} from '@/core/webrtc/provider'
 
@@ -14,5 +15,6 @@ app.provide("webrtc",webrtc);
 
 app.component("Icon",Icon);
 
-app.use(createPinia())
+app.use(createPinia());
+app.use(router);
 app.mount('#app');
